@@ -3,7 +3,7 @@ package com.aarbru.monkey.lexer;
 /**
  * Defines all the kinds of tokens we can see when parsing Monkey source.
  */
-public enum Token {
+public enum TokenType {
     ILLEGAL,
     EOF,
     IDENTIFIER,
@@ -33,11 +33,11 @@ public enum Token {
 
     public final String literal;
 
-    Token() {
+    TokenType() {
         this("");
     }
 
-    Token(String literal){
+    TokenType(String literal){
         this.literal = literal;
     }
 }
