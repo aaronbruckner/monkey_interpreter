@@ -22,40 +22,38 @@ public class Lexer {
      * @return the next token in the source file. Otherwise returns EOF token.
      */
     public Token nextToken() {
-        char nextChar;
-        while(true) {
-            if (cursor >= source.length()) {
-                return new Token(TokenType.EOF);
-            }
+        skipWhitespace();
 
-            nextChar = source.charAt(cursor++);
-
-            if (Character.isWhitespace(nextChar)) {
-                continue;
-            }
-
-            break;
+        if (cursor >= source.length()) {
+            return new Token(TokenType.EOF);
         }
 
+        char nextChar = source.charAt(cursor);
         if (isLetter(nextChar)) {
-            cursor--;
             return handleWordLikeToken();
         }
 
         if (Character.isDigit(nextChar)) {
-            cursor--;
             return handleNumberLikeToken();
         }
         
-        return handleSingleCharToken(nextChar);
+        return handleSingleCharToken();
     }
 
     private boolean isLetter(char c) {
         return Character.isAlphabetic(c) || c == '_';
     }
 
+    private void skipWhitespace() {
+        while (cursor < source.length() && Character.isWhitespace(source.charAt(cursor))) {
+            cursor++;
+        }
+    }
+
     private Token handleWordLikeToken() {
+        assert cursor < source.length();
         assert isLetter(source.charAt(cursor));
+        
         var sb = new StringBuilder();
         char nextChar;
         while(cursor < source.length() && isLetter(nextChar = source.charAt(cursor))) {
@@ -75,6 +73,7 @@ public class Lexer {
     }
 
     private Token handleNumberLikeToken() {
+        assert cursor < source.length();
         assert Character.isDigit(source.charAt(cursor));
 
         var sb = new StringBuilder();
@@ -89,7 +88,10 @@ public class Lexer {
         return new Token(TokenType.LIT_INT, word);
     }
 
-    private Token handleSingleCharToken(char nextChar) {
+    private Token handleSingleCharToken() {
+        assert cursor < source.length();
+
+        char nextChar = source.charAt(cursor++);
         TokenType type = switch (nextChar) {
             case '=' -> TokenType.OP_ASSIGN;
             case '/' -> TokenType.OP_DIVIDE;
