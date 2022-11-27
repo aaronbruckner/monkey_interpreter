@@ -16,7 +16,7 @@ public enum TokenType {
     OP_MINUS("-"),
     OP_PLUS("+"),
     OP_DIVIDE("/"),
-    OP_MULT("*"),
+    OP_MULTI("*"),
 
     // Delimiters
     DEL_COMMA(","),

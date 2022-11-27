@@ -29,7 +29,7 @@ public class TokenTypeTest {
         assertEquals("-", TokenType.OP_MINUS.literal);
         assertEquals("+", TokenType.OP_PLUS.literal);
         assertEquals("/", TokenType.OP_DIVIDE.literal);
-        assertEquals("*", TokenType.OP_MULT.literal);
+        assertEquals("*", TokenType.OP_MULTI.literal);
     }
 
     @Test
