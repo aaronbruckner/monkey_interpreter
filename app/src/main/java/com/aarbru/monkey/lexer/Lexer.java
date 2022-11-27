@@ -66,6 +66,11 @@ public class Lexer {
         TokenType type = switch(word) {
             case "fn" -> TokenType.KEY_FUNC;
             case "let" -> TokenType.KEY_LET;
+            case "if" -> TokenType.KEY_IF;
+            case "else" -> TokenType.KEY_ELSE;
+            case "return" -> TokenType.KEY_RETURN;
+            case "true" -> TokenType.LIT_TRUE;
+            case "false" -> TokenType.LIT_FALSE;
             default -> TokenType.IDENTIFIER;
         };
         

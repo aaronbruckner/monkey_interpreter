@@ -64,7 +64,8 @@ public class LexerTest {
     void testNextTokenParsesKeywords() {
         final String source = """
                 fn+let
-                let fn""";
+                let fn true
+                false if else return""";
         var lexer = new Lexer(source);
 
         var tokens = extractTokens(lexer, source.length() + 1);
@@ -74,7 +75,12 @@ public class LexerTest {
         assertEquals(TokenType.KEY_LET, tokens[2].getType());
         assertEquals(TokenType.KEY_LET, tokens[3].getType());
         assertEquals(TokenType.KEY_FUNC, tokens[4].getType());
-        assertEquals(TokenType.EOF, tokens[5].getType());
+        assertEquals(TokenType.LIT_TRUE, tokens[5].getType());
+        assertEquals(TokenType.LIT_FALSE, tokens[6].getType());
+        assertEquals(TokenType.KEY_IF, tokens[7].getType());
+        assertEquals(TokenType.KEY_ELSE, tokens[8].getType());
+        assertEquals(TokenType.KEY_RETURN, tokens[9].getType());
+        assertEquals(TokenType.EOF, tokens[10].getType());
     }
 
     @Test

@@ -10,6 +10,8 @@ public enum TokenType {
     
     // Literal
     LIT_INT,
+    LIT_TRUE("true"),
+    LIT_FALSE("false"),
     
     // Operators
     OP_ASSIGN("="),
@@ -35,7 +37,11 @@ public enum TokenType {
 
     // Keywords
     KEY_FUNC("fn"),
-    KEY_LET("let");
+    KEY_LET("let"),
+    KEY_IF("if"),
+    KEY_ELSE("else"),
+    KEY_RETURN("return");
+    
 
     public final String literal;
 
