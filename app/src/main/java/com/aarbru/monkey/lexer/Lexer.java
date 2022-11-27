@@ -37,7 +37,7 @@ public class Lexer {
             break;
         }
 
-        if (Character.isAlphabetic(nextChar)) {
+        if (isLetter(nextChar)) {
             cursor--;
             return handleWordLikeToken();
         }
@@ -50,11 +50,15 @@ public class Lexer {
         return handleSingleCharToken(nextChar);
     }
 
+    private boolean isLetter(char c) {
+        return Character.isAlphabetic(c) || c == '_';
+    }
+
     private Token handleWordLikeToken() {
-        assert Character.isAlphabetic(source.charAt(cursor));
+        assert isLetter(source.charAt(cursor));
         var sb = new StringBuilder();
         char nextChar;
-        while(cursor < source.length() && Character.isAlphabetic(nextChar = source.charAt(cursor))) {
+        while(cursor < source.length() && isLetter(nextChar = source.charAt(cursor))) {
             cursor++;
             sb.append(nextChar);
         }

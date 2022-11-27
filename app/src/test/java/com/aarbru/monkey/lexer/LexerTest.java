@@ -77,20 +77,21 @@ public class LexerTest {
     @Test
     void testNextTokenParsesIdentifiers() {
         final String source = """
-            test+helloWorld
-            let Whatever""";
+            test_+_helloWorld
+            normal What_ever""";
         var lexer = new Lexer(source);
 
         var tokens = extractTokens(lexer, source.length() + 1);
 
         assertEquals(TokenType.IDENTIFIER, tokens[0].getType());
-        assertEquals("test", tokens[0].getValue());
+        assertEquals("test_", tokens[0].getValue());
         assertEquals(TokenType.OP_PLUS, tokens[1].getType());
         assertEquals(TokenType.IDENTIFIER, tokens[2].getType());
-        assertEquals("helloWorld", tokens[2].getValue());
-        assertEquals(TokenType.KEY_LET, tokens[3].getType());
+        assertEquals("_helloWorld", tokens[2].getValue());
+        assertEquals(TokenType.IDENTIFIER, tokens[3].getType());
+        assertEquals("normal", tokens[3].getValue());
         assertEquals(TokenType.IDENTIFIER, tokens[4].getType());
-        assertEquals("Whatever", tokens[4].getValue());
+        assertEquals("What_ever", tokens[4].getValue());
         assertEquals(TokenType.EOF, tokens[5].getType());
     }
 
