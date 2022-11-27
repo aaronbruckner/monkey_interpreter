@@ -22,11 +22,20 @@ public class Lexer {
      * @return the next token in the source file. Otherwise returns EOF token.
      */
     public Token nextToken() {
-        if (cursor >= source.length()) {
-            return new Token(TokenType.EOF);
-        }
+        char nextChar;
+        while(true) {
+            if (cursor >= source.length()) {
+                return new Token(TokenType.EOF);
+            }
 
-        char nextChar = source.charAt(cursor++);
+            nextChar = source.charAt(cursor++);
+
+            if (Character.isWhitespace(nextChar)) {
+                continue;
+            }
+
+            break;
+        }
         
         TokenType type = switch (nextChar) {
             case '=' -> TokenType.OP_ASSIGN;
