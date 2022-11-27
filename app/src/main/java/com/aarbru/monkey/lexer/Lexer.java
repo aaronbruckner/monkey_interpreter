@@ -36,7 +36,36 @@ public class Lexer {
 
             break;
         }
+
+        if (Character.isAlphabetic(nextChar)) {
+            cursor--;
+            return handleWordLikeToken();
+        }
         
+        return handleSingleCharToken(nextChar);
+    }
+
+    private Token handleWordLikeToken() {
+        assert Character.isAlphabetic(source.charAt(cursor));
+        var sb = new StringBuilder();
+        char nextChar;
+        while(cursor < source.length() && Character.isAlphabetic(nextChar = source.charAt(cursor))) {
+            cursor++;
+            sb.append(nextChar);
+        }
+
+        String word = sb.toString();
+
+        TokenType type = switch(word) {
+            case "function" -> TokenType.KEY_FUNC;
+            case "let" -> TokenType.KEY_LET;
+            default -> TokenType.IDENTIFIER;
+        };
+        
+        return new Token(type, word);
+    }
+
+    private Token handleSingleCharToken(char nextChar) {
         TokenType type = switch (nextChar) {
             case '=' -> TokenType.OP_ASSIGN;
             case '/' -> TokenType.OP_DIVIDE;
