@@ -8,7 +8,7 @@ public class TokenTypeTest {
     @Test
     public void testTokenCount() {
         // If someone is adding tokens, they should add more tests.
-        assertEquals(17, TokenType.values().length);
+        assertEquals(22, TokenType.values().length);
     }
 
     @Test
@@ -30,6 +30,11 @@ public class TokenTypeTest {
         assertEquals("+", TokenType.OP_PLUS.literal);
         assertEquals("/", TokenType.OP_SLASH.literal);
         assertEquals("*", TokenType.OP_ASTERISK.literal);
+        assertEquals("==", TokenType.OP_EQUALS.literal);
+        assertEquals("!=", TokenType.OP_NOT_EQUALS.literal);
+        assertEquals("!", TokenType.OP_EXCLAMATION.literal);
+        assertEquals("<", TokenType.OP_LESS_THAN.literal);
+        assertEquals(">", TokenType.OP_GREATER_THAN.literal);
     }
 
     @Test

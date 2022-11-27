@@ -93,7 +93,20 @@ public class Lexer {
 
         char nextChar = source.charAt(cursor++);
         TokenType type = switch (nextChar) {
-            case '=' -> TokenType.OP_ASSIGN;
+            case '=' -> {
+                if (peekNextChar() == '=') {
+                    cursor++;
+                    yield TokenType.OP_EQUALS;
+                }
+                yield TokenType.OP_ASSIGN;
+            }
+            case '!' -> {
+                if (peekNextChar() == '=') {
+                    cursor++;
+                    yield TokenType.OP_NOT_EQUALS;
+                }
+                yield TokenType.OP_EXCLAMATION;
+            }
             case '/' -> TokenType.OP_SLASH;
             case '-' -> TokenType.OP_MINUS;
             case '*' -> TokenType.OP_ASTERISK;
@@ -104,9 +117,19 @@ public class Lexer {
             case ')' -> TokenType.DEL_PAREN_R;
             case ';' -> TokenType.DEL_SEMICOLON;
             case ',' -> TokenType.DEL_COMMA;
+            case '<' -> TokenType.OP_LESS_THAN;
+            case '>' -> TokenType.OP_GREATER_THAN;
             default -> throw new RuntimeException("Not Yet Implemented");
         };
 
         return new Token(type);
+    }
+
+    private char peekNextChar() {
+        if (cursor >= source.length()) {
+            return Character.MIN_VALUE;
+        }
+
+        return source.charAt(cursor);
     }
 }

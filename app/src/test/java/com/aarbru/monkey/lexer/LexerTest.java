@@ -8,7 +8,7 @@ public class LexerTest {
     
     @Test
     void testNextTokenBasicTokens() {
-        final String source = "+-/*{}();,=";
+        final String source = "+-/*{}();,=!<>";
         var lexer = new Lexer(source);
 
         var tokens = extractTokens(lexer, source.length() + 1);
@@ -24,7 +24,10 @@ public class LexerTest {
         assertEquals(TokenType.DEL_SEMICOLON, tokens[8].getType());
         assertEquals(TokenType.DEL_COMMA, tokens[9].getType());
         assertEquals(TokenType.OP_ASSIGN, tokens[10].getType());
-        assertEquals(TokenType.EOF, tokens[11].getType());
+        assertEquals(TokenType.OP_EXCLAMATION, tokens[11].getType());
+        assertEquals(TokenType.OP_LESS_THAN, tokens[12].getType());
+        assertEquals(TokenType.OP_GREATER_THAN, tokens[13].getType());
+        assertEquals(TokenType.EOF, tokens[14].getType());
     }
 
     @Test
@@ -112,6 +115,21 @@ public class LexerTest {
         assertEquals(TokenType.KEY_LET, tokens[3].getType());
         assertEquals(TokenType.LIT_INT, tokens[4].getType());
         assertEquals("88", tokens[4].getValue());
+        assertEquals(TokenType.EOF, tokens[5].getType());
+    }
+
+    @Test
+    void testNextTokenParsesTwoSymbolTokens() {
+        final String source = "==+!=+=";
+        var lexer = new Lexer(source);
+
+        var tokens = extractTokens(lexer, source.length() + 1);
+
+        assertEquals(TokenType.OP_EQUALS, tokens[0].getType());
+        assertEquals(TokenType.OP_PLUS, tokens[1].getType());
+        assertEquals(TokenType.OP_NOT_EQUALS, tokens[2].getType());
+        assertEquals(TokenType.OP_PLUS, tokens[3].getType());
+        assertEquals(TokenType.OP_ASSIGN, tokens[4].getType());
         assertEquals(TokenType.EOF, tokens[5].getType());
     }
 

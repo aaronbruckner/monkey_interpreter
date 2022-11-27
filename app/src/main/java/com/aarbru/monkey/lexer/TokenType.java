@@ -17,6 +17,12 @@ public enum TokenType {
     OP_PLUS("+"),
     OP_SLASH("/"),
     OP_ASTERISK("*"),
+    OP_EQUALS("=="),
+    OP_NOT_EQUALS("!="),
+    OP_EXCLAMATION("!"),
+    OP_LESS_THAN("<"),
+    OP_GREATER_THAN(">"),
+
 
     // Delimiters
     DEL_COMMA(","),
