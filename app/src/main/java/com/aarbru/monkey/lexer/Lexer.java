@@ -53,7 +53,7 @@ public class Lexer {
     private Token handleWordLikeToken() {
         assert cursor < source.length();
         assert isLetter(source.charAt(cursor));
-        
+
         var sb = new StringBuilder();
         char nextChar;
         while(cursor < source.length() && isLetter(nextChar = source.charAt(cursor))) {
@@ -94,9 +94,9 @@ public class Lexer {
         char nextChar = source.charAt(cursor++);
         TokenType type = switch (nextChar) {
             case '=' -> TokenType.OP_ASSIGN;
-            case '/' -> TokenType.OP_DIVIDE;
+            case '/' -> TokenType.OP_SLASH;
             case '-' -> TokenType.OP_MINUS;
-            case '*' -> TokenType.OP_MULTI;
+            case '*' -> TokenType.OP_ASTERISK;
             case '+' -> TokenType.OP_PLUS;
             case '{' -> TokenType.DEL_BRACE_L;
             case '}' -> TokenType.DEL_BRACE_R;

@@ -15,8 +15,8 @@ public class LexerTest {
 
         assertEquals(TokenType.OP_PLUS, tokens[0].getType());
         assertEquals(TokenType.OP_MINUS, tokens[1].getType());
-        assertEquals(TokenType.OP_DIVIDE, tokens[2].getType());
-        assertEquals(TokenType.OP_MULTI, tokens[3].getType());
+        assertEquals(TokenType.OP_SLASH, tokens[2].getType());
+        assertEquals(TokenType.OP_ASTERISK, tokens[3].getType());
         assertEquals(TokenType.DEL_BRACE_L, tokens[4].getType());
         assertEquals(TokenType.DEL_BRACE_R, tokens[5].getType());
         assertEquals(TokenType.DEL_PAREN_L, tokens[6].getType());
@@ -40,8 +40,8 @@ public class LexerTest {
 
         assertEquals(TokenType.OP_PLUS, tokens[0].getType());
         assertEquals(TokenType.OP_MINUS, tokens[1].getType());
-        assertEquals(TokenType.OP_MULTI, tokens[2].getType());
-        assertEquals(TokenType.OP_DIVIDE, tokens[3].getType());
+        assertEquals(TokenType.OP_ASTERISK, tokens[2].getType());
+        assertEquals(TokenType.OP_SLASH, tokens[3].getType());
         assertEquals(TokenType.EOF, tokens[4].getType());
     }
 
