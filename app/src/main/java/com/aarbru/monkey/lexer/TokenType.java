@@ -28,7 +28,7 @@ public enum TokenType {
 
 
     // Keywords
-    KEY_FUNC("function"),
+    KEY_FUNC("fn"),
     KEY_LET("let");
 
     public final String literal;

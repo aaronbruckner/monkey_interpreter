@@ -41,6 +41,11 @@ public class Lexer {
             cursor--;
             return handleWordLikeToken();
         }
+
+        if (Character.isDigit(nextChar)) {
+            cursor--;
+            return handleNumberLikeToken();
+        }
         
         return handleSingleCharToken(nextChar);
     }
@@ -57,12 +62,27 @@ public class Lexer {
         String word = sb.toString();
 
         TokenType type = switch(word) {
-            case "function" -> TokenType.KEY_FUNC;
+            case "fn" -> TokenType.KEY_FUNC;
             case "let" -> TokenType.KEY_LET;
             default -> TokenType.IDENTIFIER;
         };
         
         return new Token(type, word);
+    }
+
+    private Token handleNumberLikeToken() {
+        assert Character.isDigit(source.charAt(cursor));
+
+        var sb = new StringBuilder();
+        char nextChar;
+        while (cursor < source.length() && Character.isDigit((nextChar = source.charAt(cursor)))) {
+            cursor++;
+            sb.append(nextChar);
+        }
+
+        String word = sb.toString();
+
+        return new Token(TokenType.LIT_INT, word);
     }
 
     private Token handleSingleCharToken(char nextChar) {

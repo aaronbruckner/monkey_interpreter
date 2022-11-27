@@ -60,8 +60,8 @@ public class LexerTest {
     @Test
     void testNextTokenParsesKeywords() {
         final String source = """
-                function+let
-                let function""";
+                fn+let
+                let fn""";
         var lexer = new Lexer(source);
 
         var tokens = extractTokens(lexer, source.length() + 1);
@@ -91,6 +91,26 @@ public class LexerTest {
         assertEquals(TokenType.KEY_LET, tokens[3].getType());
         assertEquals(TokenType.IDENTIFIER, tokens[4].getType());
         assertEquals("Whatever", tokens[4].getValue());
+        assertEquals(TokenType.EOF, tokens[5].getType());
+    }
+
+    @Test
+    void testNextTokenParsesLiteralNumbers() {
+        final String source = """
+            123+8965
+            let 88""";
+        var lexer = new Lexer(source);
+
+        var tokens = extractTokens(lexer, source.length() + 1);
+
+        assertEquals(TokenType.LIT_INT, tokens[0].getType());
+        assertEquals("123", tokens[0].getValue());
+        assertEquals(TokenType.OP_PLUS, tokens[1].getType());
+        assertEquals(TokenType.LIT_INT, tokens[2].getType());
+        assertEquals("8965", tokens[2].getValue());
+        assertEquals(TokenType.KEY_LET, tokens[3].getType());
+        assertEquals(TokenType.LIT_INT, tokens[4].getType());
+        assertEquals("88", tokens[4].getValue());
         assertEquals(TokenType.EOF, tokens[5].getType());
     }
 

@@ -44,7 +44,7 @@ public class TokenTypeTest {
 
     @Test
     public void testTokenKeywords() {
-        assertEquals("function", TokenType.KEY_FUNC.literal);
+        assertEquals("fn", TokenType.KEY_FUNC.literal);
         assertEquals("let", TokenType.KEY_LET.literal);
     }
 }
