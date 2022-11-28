@@ -1,5 +1,8 @@
 package com.aarbru.monkey.lexer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Responsible for converting a source file into a stream of tokens.
  * 
@@ -38,6 +41,30 @@ public class Lexer {
         }
         
         return handleSingleCharToken();
+    }
+
+    /**
+     * Consumes the source file and returns a list of every token found within the source.
+     * @return a list of all tokens found within the source.
+     */
+    public List<Token> getAllTokens() {
+        var tokens = new ArrayList<Token>();
+
+        while(true) {
+            tokens.add(nextToken());
+            
+            if (tokens.get(tokens.size() - 1).getType() == TokenType.EOF) {
+                return tokens;
+            }
+        }
+
+    }
+
+    /**
+     * Resets the token stream to the start of the source file.
+     */
+    public void reset() {
+
     }
 
     private boolean isLetter(char c) {

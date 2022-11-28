@@ -18,8 +18,8 @@ repositories {
 }
 
 dependencies {
-    // This dependency is used by the application.
     implementation("com.google.guava:guava:31.1-jre")
+    implementation("com.beust:jcommander:1.82")
 }
 
 testing {

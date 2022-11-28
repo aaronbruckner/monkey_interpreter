@@ -3,12 +3,49 @@
  */
 package com.aarbru.monkey;
 
+import com.aarbru.monkey.terminal.LexerRepl;
+import com.aarbru.monkey.terminal.commandline.LexerCommand;
+import com.aarbru.monkey.terminal.commandline.MainCommand;
+import com.beust.jcommander.JCommander;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+    public static void main(String[] args) {
+        var mainCommand = new MainCommand();
+        var lexerCommand = new LexerCommand();
+
+        JCommander commandLine = JCommander.newBuilder()
+            .addObject(mainCommand)
+            .addCommand("lexer", lexerCommand)
+            .build();
+        
+        commandLine.parse(args);
+
+        if (mainCommand.help()) {
+            commandLine.usage();
+            return;
+        }
+
+        String cmdName = commandLine.getParsedCommand();
+        
+        if (cmdName == null) {
+            System.out.println("You must specify a subcommand. See usage (--help).");
+            return;
+        }
+
+        switch (cmdName) {
+            case "lexer" -> {
+                handleLexerInvoke(lexerCommand);
+            }
+            default -> {
+                System.out.println("Unrecognized subcommand: " + cmdName);
+            }
+        }
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    private static void handleLexerInvoke(LexerCommand lexerCommand) {
+        if (lexerCommand.repl()) {
+            LexerRepl.executeForever();
+            return;
+        }
     }
 }

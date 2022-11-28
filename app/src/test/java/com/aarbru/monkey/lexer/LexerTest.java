@@ -1,6 +1,9 @@
 package com.aarbru.monkey.lexer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -137,6 +140,20 @@ public class LexerTest {
         assertEquals(TokenType.OP_PLUS, tokens[3].getType());
         assertEquals(TokenType.OP_ASSIGN, tokens[4].getType());
         assertEquals(TokenType.EOF, tokens[5].getType());
+    }
+
+    @Test
+    void testGetAllTokensReturnsAListOfEveryTokenInTheSource() {
+        final String source = "=-";
+        var lexer = new Lexer(source);
+
+        var tokens = lexer.getAllTokens();
+
+        assertNotNull(tokens);
+        assertEquals(3, tokens.size());
+        assertEquals(TokenType.OP_ASSIGN, tokens.get(0).getType());
+        assertEquals(TokenType.OP_MINUS, tokens.get(1).getType());
+        assertEquals(TokenType.EOF, tokens.get(2).getType());
     }
 
     private Token[] extractTokens(Lexer lexer, int size){
