@@ -126,6 +126,21 @@ public class LexerTest {
     }
 
     @Test
+    void testNextTokenParsesIllegalTokens() {
+        final String source = "`+~";
+        var lexer = new Lexer(source);
+
+        var tokens = extractTokens(lexer, source.length() + 1);
+
+        assertEquals(TokenType.ILLEGAL, tokens[0].getType());
+        assertEquals("`", tokens[0].getValue());
+        assertEquals(TokenType.OP_PLUS, tokens[1].getType());
+        assertEquals(TokenType.ILLEGAL, tokens[2].getType());
+        assertEquals("~", tokens[2].getValue());
+        assertEquals(TokenType.EOF, tokens[3].getType());
+    }
+
+    @Test
     void testNextTokenParsesTwoSymbolTokens() {
         final String source = "==+!=+=";
         var lexer = new Lexer(source);

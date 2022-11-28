@@ -124,10 +124,12 @@ public class Lexer {
         assert cursor < source.length();
 
         char nextChar = source.charAt(cursor++);
+        String value = String.valueOf(nextChar);
         TokenType type = switch (nextChar) {
             case '=' -> {
                 if (peekNextChar() == '=') {
                     cursor++;
+                    value = "==";
                     yield TokenType.OP_EQUALS;
                 }
                 yield TokenType.OP_ASSIGN;
@@ -135,6 +137,7 @@ public class Lexer {
             case '!' -> {
                 if (peekNextChar() == '=') {
                     cursor++;
+                    value = "!=";
                     yield TokenType.OP_NOT_EQUALS;
                 }
                 yield TokenType.OP_EXCLAMATION;
@@ -151,10 +154,10 @@ public class Lexer {
             case ',' -> TokenType.DEL_COMMA;
             case '<' -> TokenType.OP_LESS_THAN;
             case '>' -> TokenType.OP_GREATER_THAN;
-            default -> throw new RuntimeException("Not Yet Implemented");
+            default -> TokenType.ILLEGAL;
         };
 
-        return new Token(type);
+        return new Token(type, value);
     }
 
     private char peekNextChar() {
