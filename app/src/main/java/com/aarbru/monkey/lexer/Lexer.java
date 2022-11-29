@@ -11,11 +11,19 @@ import java.util.List;
 public class Lexer {
 
     private final String source;
-
     private int cursor;
+    private Token peekToken;
 
     public Lexer(String source) {
         this.source = source;
+    }
+
+    public Token peekNextToken() {
+        if (peekToken == null) {
+            peekToken = nextToken();
+        }
+
+        return peekToken;
     }
 
     /**
@@ -25,6 +33,12 @@ public class Lexer {
      * @return the next token in the source file. Otherwise returns EOF token.
      */
     public Token nextToken() {
+        if (peekToken != null) {
+            var result = peekToken;
+            peekToken = null;
+            return result;
+        }
+
         skipWhitespace();
 
         if (cursor >= source.length()) {

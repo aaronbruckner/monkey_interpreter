@@ -169,6 +169,26 @@ public class LexerTest {
         assertEquals(TokenType.EOF, tokens.get(2).getType());
     }
 
+    @Test
+    void testPeekNextToken() {
+        final String source = "+-";
+        var lexer = new Lexer(source);
+
+        var peekPlusToken1 = lexer.peekNextToken();
+        var nextPlusToken1 = lexer.nextToken();
+        var peekMinusToken2 = lexer.peekNextToken();
+        var peekMinusToken3 = lexer.peekNextToken();
+        var nextMinusToken2 = lexer.nextToken();
+        var nextEOFToken3 = lexer.nextToken();
+
+        assertEquals(TokenType.OP_PLUS, peekPlusToken1.getType());
+        assertEquals(TokenType.OP_PLUS, nextPlusToken1.getType());
+        assertEquals(TokenType.OP_MINUS, peekMinusToken2.getType());
+        assertEquals(TokenType.OP_MINUS, peekMinusToken3.getType());
+        assertEquals(TokenType.OP_MINUS, nextMinusToken2.getType());
+        assertEquals(TokenType.EOF, nextEOFToken3.getType());
+    }
+
     private Token[] extractTokens(Lexer lexer, int size){
         var tokens = new Token[size];
 
