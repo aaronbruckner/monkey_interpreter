@@ -189,6 +189,41 @@ public class LexerTest {
         assertEquals(TokenType.EOF, nextEOFToken3.getType());
     }
 
+    @Test
+    void testNextTokenHasCorrectRowAndColValues() {
+        final String source = "+ test\n\n ==  123";
+        var lexer = new Lexer(source);
+
+        var peekToken1 = lexer.peekNextToken();
+        var nextToken1 = lexer.nextToken();
+
+        var peekToken2 = lexer.peekNextToken();
+        var nextToken2 = lexer.nextToken();
+
+        var peekToken3 = lexer.peekNextToken();
+        var nextToken3 = lexer.nextToken();
+
+        var peekToken4 = lexer.peekNextToken();
+        var nextToken4 = lexer.nextToken();
+
+        assertTokenPosition(peekToken1, 1, 1);
+        assertTokenPosition(nextToken1, 1, 1);
+
+        assertTokenPosition(peekToken2, 1, 3);
+        assertTokenPosition(nextToken2, 1, 3);
+
+        assertTokenPosition(peekToken3, 3, 2);
+        assertTokenPosition(nextToken3, 3, 2);
+
+        assertTokenPosition(peekToken4, 3, 6);
+        assertTokenPosition(nextToken4, 3, 6);
+    }
+
+    private void assertTokenPosition(Token t, int row, int col) {
+        assertEquals(row, t.getRow());
+        assertEquals(col, t.getCol());
+    }
+
     private Token[] extractTokens(Lexer lexer, int size){
         var tokens = new Token[size];
 

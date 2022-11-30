@@ -9,10 +9,14 @@ import java.util.List;
  * This is the first step in interpreting Monkey code.
  */
 public class Lexer {
+    private static final int ROW_START = 1;
+    private static final int COL_START = 1;
 
     private final String source;
     private int cursor;
     private Token peekToken;
+    private int currentRow = ROW_START;
+    private int currentCol = COL_START;
 
     public Lexer(String source) {
         this.source = source;
@@ -74,31 +78,36 @@ public class Lexer {
 
     }
 
-    /**
-     * Resets the token stream to the start of the source file.
-     */
-    public void reset() {
-
-    }
-
     private boolean isLetter(char c) {
         return Character.isAlphabetic(c) || c == '_';
     }
 
     private void skipWhitespace() {
         while (cursor < source.length() && Character.isWhitespace(source.charAt(cursor))) {
-            cursor++;
+            advanceCursor();
         }
+    }
+
+    private void advanceCursor() {
+        if (source.charAt(cursor) == '\n') {
+            currentRow++;
+            currentCol = COL_START;
+        } else {
+            currentCol++;
+        }
+        cursor++;
     }
 
     private Token handleWordLikeToken() {
         assert cursor < source.length();
         assert isLetter(source.charAt(cursor));
-
+        
+        int row = currentRow;
+        int col = currentCol;
         var sb = new StringBuilder();
         char nextChar;
         while(cursor < source.length() && isLetter(nextChar = source.charAt(cursor))) {
-            cursor++;
+            advanceCursor();
             sb.append(nextChar);
         }
 
@@ -115,34 +124,39 @@ public class Lexer {
             default -> TokenType.IDENTIFIER;
         };
         
-        return new Token(type, word);
+        return new Token(type, word, row, col);
     }
 
     private Token handleNumberLikeToken() {
         assert cursor < source.length();
         assert Character.isDigit(source.charAt(cursor));
 
+        int row = currentRow;
+        int col = currentCol;
         var sb = new StringBuilder();
         char nextChar;
         while (cursor < source.length() && Character.isDigit((nextChar = source.charAt(cursor)))) {
-            cursor++;
+            advanceCursor();
             sb.append(nextChar);
         }
 
         String word = sb.toString();
 
-        return new Token(TokenType.LIT_INT, word);
+        return new Token(TokenType.LIT_INT, word, row, col);
     }
 
     private Token handleSingleCharToken() {
         assert cursor < source.length();
 
-        char nextChar = source.charAt(cursor++);
+        char nextChar = source.charAt(cursor);
+        int row = currentRow;
+        int col = currentCol;
+        advanceCursor();
         String value = String.valueOf(nextChar);
         TokenType type = switch (nextChar) {
             case '=' -> {
                 if (peekNextChar() == '=') {
-                    cursor++;
+                    advanceCursor();
                     value = "==";
                     yield TokenType.OP_EQUALS;
                 }
@@ -150,7 +164,7 @@ public class Lexer {
             }
             case '!' -> {
                 if (peekNextChar() == '=') {
-                    cursor++;
+                    advanceCursor();
                     value = "!=";
                     yield TokenType.OP_NOT_EQUALS;
                 }
@@ -171,7 +185,7 @@ public class Lexer {
             default -> TokenType.ILLEGAL;
         };
 
-        return new Token(type, value);
+        return new Token(type, value, row, col);
     }
 
     private char peekNextChar() {
