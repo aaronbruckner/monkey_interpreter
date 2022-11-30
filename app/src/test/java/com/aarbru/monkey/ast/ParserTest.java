@@ -8,12 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import org.junit.jupiter.api.Test;
 
 import com.aarbru.monkey.ast.nodes.AstLetStatement;
+import com.aarbru.monkey.ast.nodes.AstReturnStatement;
 import com.aarbru.monkey.ast.nodes.AstStatement;
 import com.aarbru.monkey.exceptions.MissingSemicolonParseException;
 import com.aarbru.monkey.exceptions.UnexpectedTokenParseException;
 import com.aarbru.monkey.lexer.Lexer;
 
 public class ParserTest {
+
     @Test
     void testParseProgramParsesLetStatement() {
         var source = "let test = 5; let another = 7;";
@@ -57,6 +59,26 @@ public class ParserTest {
         var exception = assertThrowsExactly(MissingSemicolonParseException.class, () -> parser.parseProgram());
 
         assertEquals("Expected semicolon but found none", exception.getMessage());
+    }
+
+    @Test
+    void testParseProgramParsesReturnStatement() {
+        var source = "return 5; return 10;";
+        var parser = new Parser(new Lexer(source));
+
+        Program program = parser.parseProgram();
+        
+        var statements = program.getStatements();
+        assertNotNull(statements);
+        assertEquals(2, statements.size());
+        assertReturnStatement(statements.get(0));
+        assertReturnStatement(statements.get(1));
+        // TODO - Assert expression once parsing is done.
+    }
+
+    private AstReturnStatement assertReturnStatement(AstStatement node) {
+        assertInstanceOf(AstReturnStatement.class, node);
+        return (AstReturnStatement) node;
     }
 
     private AstLetStatement assertLetStatement(AstStatement node, String expectedName) {

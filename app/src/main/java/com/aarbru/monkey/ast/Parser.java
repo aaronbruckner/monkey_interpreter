@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.aarbru.monkey.ast.nodes.AstIdentifier;
 import com.aarbru.monkey.ast.nodes.AstLetStatement;
+import com.aarbru.monkey.ast.nodes.AstReturnStatement;
 import com.aarbru.monkey.ast.nodes.AstStatement;
 import com.aarbru.monkey.exceptions.MissingSemicolonParseException;
 import com.aarbru.monkey.exceptions.UnexpectedTokenParseException;
@@ -23,6 +24,7 @@ public class Parser {
         while(lexer.peekNextToken().getType() != TokenType.EOF) {
             var statement = switch(lexer.peekNextToken().getType()) {
                 case KEY_LET -> extractLetStatement();
+                case KEY_RETURN -> extractReturnStatement();
                 default -> throw new RuntimeException("Unrecognized Token: " + lexer.peekNextToken().getType());
             };
 
@@ -57,6 +59,20 @@ public class Parser {
         extractExpression();
 
         return new AstLetStatement(new AstIdentifier(identifierToken.getValue()), null);
+    }
+
+    /**
+     * Example Return Statement: `return 5;`
+     * 
+     * @return an extracted Return statement AST node.
+     */
+    private AstReturnStatement extractReturnStatement() {
+        assert lexer.nextToken().getType() == TokenType.KEY_RETURN;
+
+        // TODO consume until we can extract expressions.
+        extractExpression();
+
+        return new AstReturnStatement(null);
     }
 
     private void extractExpression() {
