@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.aarbru.monkey.ast.nodes.AstIdentifier;
 import com.aarbru.monkey.ast.nodes.AstLetStatement;
 import com.aarbru.monkey.ast.nodes.AstStatement;
+import com.aarbru.monkey.exceptions.MissingSemicolonParseException;
 import com.aarbru.monkey.exceptions.UnexpectedTokenParseException;
 import com.aarbru.monkey.lexer.Lexer;
 import com.aarbru.monkey.lexer.TokenType;
@@ -53,8 +54,18 @@ public class Parser {
         }
 
         // TODO consume until we can extract expressions.
-        while (lexer.nextToken().getType() != TokenType.DEL_SEMICOLON);
+        extractExpression();
 
         return new AstLetStatement(new AstIdentifier(identifierToken.getValue()), null);
+    }
+
+    private void extractExpression() {
+        // TODO consume until we can extract expressions.
+        TokenType type;
+        while ((type = lexer.nextToken().getType()) != TokenType.DEL_SEMICOLON) {
+            if (type == TokenType.EOF) {
+                throw new MissingSemicolonParseException();
+            }
+        }
     }
 }

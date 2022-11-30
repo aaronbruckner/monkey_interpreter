@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.aarbru.monkey.ast.nodes.AstLetStatement;
 import com.aarbru.monkey.ast.nodes.AstStatement;
+import com.aarbru.monkey.exceptions.MissingSemicolonParseException;
 import com.aarbru.monkey.exceptions.UnexpectedTokenParseException;
 import com.aarbru.monkey.lexer.Lexer;
 
@@ -46,6 +47,16 @@ public class ParserTest {
         var exception = assertThrowsExactly(UnexpectedTokenParseException.class, () -> parser.parseProgram());
 
         assertEquals("Unexpected token found. Expected OP_ASSIGN, found LIT_INT(5) at row: 1, col: 10", exception.getMessage());
+    }
+
+    @Test
+    void testParseProgramParsesLetStatementMissingSemicolon() {
+        var source = "let test = 5; \n let testTwo = 7";
+        var parser = new Parser(new Lexer(source));
+
+        var exception = assertThrowsExactly(MissingSemicolonParseException.class, () -> parser.parseProgram());
+
+        assertEquals("Expected semicolon but found none", exception.getMessage());
     }
 
     private AstLetStatement assertLetStatement(AstStatement node, String expectedName) {
