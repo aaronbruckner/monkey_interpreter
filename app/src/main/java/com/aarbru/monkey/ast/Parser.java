@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.aarbru.monkey.ast.nodes.AstIdentifier;
 import com.aarbru.monkey.ast.nodes.AstLetStatement;
 import com.aarbru.monkey.ast.nodes.AstStatement;
+import com.aarbru.monkey.exceptions.UnexpectedTokenParseException;
 import com.aarbru.monkey.lexer.Lexer;
 import com.aarbru.monkey.lexer.TokenType;
 
@@ -40,9 +41,16 @@ public class Parser {
     private AstLetStatement extractLetStatement() {
         assert lexer.nextToken().getType() == TokenType.KEY_LET;
 
-        // TODO assert on these values.
         var identifierToken = lexer.nextToken();
-        var equalsToken = lexer.nextToken();
+        var assignToken = lexer.nextToken();
+        
+        // Unexpected token checks
+        if (identifierToken.getType() != TokenType.IDENTIFIER) {
+            throw new UnexpectedTokenParseException(identifierToken, TokenType.IDENTIFIER);
+        }
+        if (assignToken.getType() != TokenType.OP_ASSIGN) {
+            throw new UnexpectedTokenParseException(assignToken, TokenType.OP_ASSIGN);
+        }
 
         // TODO consume until we can extract expressions.
         while (lexer.nextToken().getType() != TokenType.DEL_SEMICOLON);

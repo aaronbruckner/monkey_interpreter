@@ -3,11 +3,14 @@ package com.aarbru.monkey.ast;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import org.junit.jupiter.api.Test;
 
 import com.aarbru.monkey.ast.nodes.AstLetStatement;
 import com.aarbru.monkey.ast.nodes.AstStatement;
+import com.aarbru.monkey.exceptions.UnexpectedTokenParseException;
 import com.aarbru.monkey.lexer.Lexer;
 
 public class ParserTest {
@@ -24,6 +27,26 @@ public class ParserTest {
         assertLetStatement(statements.get(0), "test");
         assertLetStatement(statements.get(1), "another");
         // TODO - Assert expression once parsing is done.
+    }
+
+    @Test
+    void testParseProgramParsesLetStatementMissingIdentifier() {
+        var source = "let 123 = 5;";
+        var parser = new Parser(new Lexer(source));
+
+        var exception = assertThrowsExactly(UnexpectedTokenParseException.class, () -> parser.parseProgram());
+
+        assertEquals("Unexpected token found. Expected IDENTIFIER, found LIT_INT(123) at row: 1, col: 5", exception.getMessage());
+    }
+
+    @Test
+    void testParseProgramParsesLetStatementMissingEquals() {
+        var source = "let test 5;";
+        var parser = new Parser(new Lexer(source));
+
+        var exception = assertThrowsExactly(UnexpectedTokenParseException.class, () -> parser.parseProgram());
+
+        assertEquals("Unexpected token found. Expected OP_ASSIGN, found LIT_INT(5) at row: 1, col: 10", exception.getMessage());
     }
 
     private AstLetStatement assertLetStatement(AstStatement node, String expectedName) {
