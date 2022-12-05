@@ -2,7 +2,10 @@ package com.aarbru.monkey.ast;
 
 import java.util.ArrayList;
 
+import com.aarbru.monkey.ast.nodes.AstExpression;
+import com.aarbru.monkey.ast.nodes.AstExpressionStatement;
 import com.aarbru.monkey.ast.nodes.AstIdentifier;
+import com.aarbru.monkey.ast.nodes.AstIdentifierExpression;
 import com.aarbru.monkey.ast.nodes.AstLetStatement;
 import com.aarbru.monkey.ast.nodes.AstReturnStatement;
 import com.aarbru.monkey.ast.nodes.AstStatement;
@@ -25,7 +28,7 @@ public class Parser {
             var statement = switch(lexer.peekNextToken().getType()) {
                 case KEY_LET -> extractLetStatement();
                 case KEY_RETURN -> extractReturnStatement();
-                default -> throw new RuntimeException("Unrecognized Token: " + lexer.peekNextToken().getType());
+                default -> extractExpressionStatement();
             };
 
             if (statement != null) {
@@ -75,7 +78,13 @@ public class Parser {
         return new AstReturnStatement(null);
     }
 
-    private void extractExpression() {
+    private AstExpressionStatement extractExpressionStatement() {
+        return new AstExpressionStatement(extractExpression());
+    }
+
+    private AstExpression extractExpression() {
+        var expression = new AstIdentifierExpression(lexer.peekNextToken());
+        
         // TODO consume until we can extract expressions.
         TokenType type;
         while ((type = lexer.nextToken().getType()) != TokenType.DEL_SEMICOLON) {
@@ -83,5 +92,7 @@ public class Parser {
                 throw new MissingSemicolonParseException();
             }
         }
+
+        return expression;
     }
 }

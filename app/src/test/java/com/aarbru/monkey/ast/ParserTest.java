@@ -5,8 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
+import com.aarbru.monkey.ast.nodes.AstExpression;
+import com.aarbru.monkey.ast.nodes.AstExpressionStatement;
+import com.aarbru.monkey.ast.nodes.AstIdentifierExpression;
 import com.aarbru.monkey.ast.nodes.AstLetStatement;
 import com.aarbru.monkey.ast.nodes.AstReturnStatement;
 import com.aarbru.monkey.ast.nodes.AstStatement;
@@ -23,9 +28,7 @@ public class ParserTest {
 
         Program program = parser.parseProgram();
         
-        var statements = program.getStatements();
-        assertNotNull(statements);
-        assertEquals(2, statements.size());
+        var statements = assertProgramStatements(program, 2);
         assertLetStatement(statements.get(0), "test");
         assertLetStatement(statements.get(1), "another");
         // TODO - Assert expression once parsing is done.
@@ -68,12 +71,43 @@ public class ParserTest {
 
         Program program = parser.parseProgram();
         
-        var statements = program.getStatements();
-        assertNotNull(statements);
-        assertEquals(2, statements.size());
+        var statements = assertProgramStatements(program, 2);
         assertReturnStatement(statements.get(0));
         assertReturnStatement(statements.get(1));
         // TODO - Assert expression once parsing is done.
+    }
+
+    @Test
+    void testParseProgramParsesIdentifierExpressionStatement() {
+        var source = "foobar;";
+        var parser = new Parser(new Lexer(source));
+
+        Program program = parser.parseProgram();
+
+        var statements = assertProgramStatements(program, 1);
+        var expressionStatement = assertExpressionStatement(statements.get(0));
+        var identifierExpression = assertIdentifierExpression(expressionStatement.getValue());
+        assertEquals(identifierExpression.getName(), "foobar");
+    }
+
+    private List<AstStatement> assertProgramStatements(Program program, int expectedSize) {
+        var statements = program.getStatements();
+        assertNotNull(statements);
+        assertEquals(expectedSize, statements.size());
+        
+        return statements;
+    }
+
+    private AstIdentifierExpression assertIdentifierExpression(AstExpression expression) {
+        assertNotNull(expression);
+        assertInstanceOf(AstIdentifierExpression.class, expression);
+
+        return (AstIdentifierExpression) expression;
+    }
+
+    private AstExpressionStatement assertExpressionStatement(AstStatement node) {
+        assertInstanceOf(AstExpressionStatement.class, node);
+        return (AstExpressionStatement) node;
     }
 
     private AstReturnStatement assertReturnStatement(AstStatement node) {
